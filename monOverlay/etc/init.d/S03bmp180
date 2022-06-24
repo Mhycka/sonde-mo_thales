@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Start the i2c/bmp180
+#
+
+
+case "$1" in
+  start)
+	printf "Starting i2c: "
+	modprobe i2c-dev
+	modprobe bmp180-i2c
+	modprobe i2c-bcm2835
+	echo "bmp180 0x77" > /sys/bus/i2c/devices/i2c-1/new_device
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+	printf "Stopping i2c: "
+	echo "bmp180 0x77" > /sys/bus/i2c/devices/i2c-1/delete_device
+
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit $?
+
