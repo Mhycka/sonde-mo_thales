@@ -7,15 +7,16 @@
 case "$1" in
   start)
 	printf "Starting i2c: "
-	modprobe i2c-dev
-	modprobe bmp180-i2c
-	modprobe i2c-bcm2835
-	echo "bmp180 0x77" > /sys/bus/i2c/devices/i2c-1/new_device
+	modprobe i2c-dev  && \
+	modprobe bmp280-i2c && \
+	modprobe i2c-bcm2835 
 	[ $? = 0 ] && echo "OK" || echo "FAIL"
 	;;
   stop)
 	printf "Stopping i2c: "
-	echo "bmp180 0x77" > /sys/bus/i2c/devices/i2c-1/delete_device
+	modprobe -r i2c-dev && \
+	modprobe -r bmp280-i2c && \
+	modprobe -r i2c-bcm2835
 
 	[ $? = 0 ] && echo "OK" || echo "FAIL"
 	;;
