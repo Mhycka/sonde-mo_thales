@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Start the LEDs
+#
+
+# Debian ifupdown needs the /run/network lock directory
+
+case "$1" in
+  start)
+	printf "Starting LEDs: "
+	echo heartbeat > /sys/class/leds/led0/trigger && \
+	echo none > /sys/class/leds/led1/trigger && \
+	echo 0 > /sys/class/leds/led1/brightness
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+	printf "Stopping LEDs: "
+	echo none  > /sys/class/leds/led0/trigger && \
+	echo 0 > /sys/class/leds/led0/brightness && \
+        echo none > /sys/class/leds/led1/trigger && \
+        echo 0 > /sys/class/leds/led1/brightness
+
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit $?
+
