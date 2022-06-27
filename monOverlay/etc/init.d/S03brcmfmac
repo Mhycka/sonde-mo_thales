@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Start the brcmfmac module
+#
+
+
+case "$1" in
+  start)
+	printf "Starting brcmfmac: "
+	modprobe brcmfmac
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+	printf "Stopping brcmfmac: "
+	modprobe -r brcmfmac
+
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit $?
+
