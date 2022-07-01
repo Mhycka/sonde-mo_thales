@@ -1,1 +1,4 @@
-<?php phpinfo(); ?>
+<?php 
+	header('Location:/main.php');
+	exit;
+ ?>
