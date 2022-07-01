@@ -7,11 +7,11 @@
 #include <cstring>
 #include "sqlite3.h"
 
+using namespace std;
+
 #define DATABASE "/data/mydatabase.sqlite3"
 #define PRESSURE "/sys/bus/iio/devices/iio:device0/in_pressure_input"
 #define TEMPERATURE "/sys/bus/iio/devices/iio:device0/in_temp_input"
-
-using namespace std;
 
 
 sqlite3 *db;
@@ -21,7 +21,7 @@ void signalHandler( int signum ) {
    exit(signum);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     signal(SIGINT, signalHandler);
 
@@ -29,6 +29,7 @@ int main()
     char *errmsg;
     sqlite3_stmt *stmt;
     float temp, pressure;
+    int FREQUENCY = atoi(argv[1]);
 
     rc = sqlite3_open(DATABASE, &db);
     if( rc )
@@ -42,6 +43,7 @@ int main()
     {
             std::ifstream inputTemp(TEMPERATURE);
             inputTemp >> temp;
+	    temp = temp/1000;
 
             std::ifstream inputPress(PRESSURE);
             inputPress >> pressure;
@@ -63,9 +65,9 @@ int main()
                 std::cerr << "SQL step error " << std::endl;
                 std::exit(rc);
             }
-
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+	    	
+            cout << "nouvelle entrée" << endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(FREQUENCY));
     }
     return 0;
 }
