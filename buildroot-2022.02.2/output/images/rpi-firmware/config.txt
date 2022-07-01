@@ -27,6 +27,3 @@ dtoverlay=miniuart-bt
 
 # enable autoprobing of Bluetooth driver without need of hciattach/btattach
 dtoverlay=krnbt=on
-
-dtparam=i2c_arm=on
-dtoverlay=i2c-sensor,bmp180, addr=0x77
