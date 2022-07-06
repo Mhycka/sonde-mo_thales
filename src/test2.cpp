@@ -12,7 +12,7 @@ using namespace std;
 #define DATABASE "/data/mydatabase.sqlite3"
 #define PRESSURE "/sys/bus/iio/devices/iio:device0/in_pressure_input"
 #define TEMPERATURE "/sys/bus/iio/devices/iio:device0/in_temp_input"
-
+#define FREQUENCY "/data/config_bmp180todb"
 
 sqlite3 *db;
 void signalHandler( int signum ) {
@@ -21,7 +21,7 @@ void signalHandler( int signum ) {
    exit(signum);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     signal(SIGINT, signalHandler);
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     char *errmsg;
     sqlite3_stmt *stmt;
     float temp, pressure;
-    int FREQUENCY = atoi(argv[1]);
+    int freq;
 
     rc = sqlite3_open(DATABASE, &db);
     if( rc )
@@ -40,25 +40,31 @@ int main(int argc, char *argv[])
 
 
     while(true)
-    {
+    {	
+	   
+	    std::ifstream inputFreq(FREQUENCY);
+	    inputFreq >> freq;
+	    if(freq == 0)
+	    	freq = 60000;	
+
             std::ifstream inputTemp(TEMPERATURE);
             inputTemp >> temp;
 	    temp = temp/1000;
 
             std::ifstream inputPress(PRESSURE);
             inputPress >> pressure;
-
-            char* sql = "insert into data_bmp180 (temperature, pressure, date) values(round(?,2), round(?,2), datetime('now','localtime'));";
+	    pressure = pressure * 10;
+            char* sql = "insert into data_bmp180 (temperature, pressure, date, timesecond) values(round(?,2), round(?,2), datetime('now','localtime'), strftime('%s'));";
             rc = sqlite3_prepare(db, sql, -1, &stmt, NULL);
             if( rc != SQLITE_OK )
             {
                 std::cerr <<  "SQL prepare error "  << std::endl;
                 std::exit(rc);
             }
-
+	   
             rc = sqlite3_bind_double(stmt, 1, temp);
             rc = sqlite3_bind_double(stmt, 2, pressure);
-
+	   
             rc = sqlite3_step(stmt);
             if ( rc != SQLITE_DONE)
             {
@@ -66,8 +72,8 @@ int main(int argc, char *argv[])
                 std::exit(rc);
             }
 	    	
-            cout << "nouvelle entrée" << endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(FREQUENCY));
+           
+            std::this_thread::sleep_for(std::chrono::milliseconds(freq));
     }
     return 0;
 }

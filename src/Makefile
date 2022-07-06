@@ -1,5 +1,5 @@
 CFLAGS = -O2 -mfpu=vfp -mfloat-abi=hard -w -g
-LFLAGS = -lsqlite3
+LFLAGS = -lcgicc -lsqlite3 
 CROSS_COMPILE = /home/dev/buildroot/buildroot-2022.02.2/output/host/bin/arm-buildroot-linux-uclibcgnueabihf-
 CC = $(CROSS_COMPILE)gcc
 CPP = $(CROSS_COMPILE)g++
