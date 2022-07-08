@@ -40,12 +40,11 @@ int main()
 
 
     while(true)
-    {	
-	   
+    {
 	    std::ifstream inputFreq(FREQUENCY);
 	    inputFreq >> freq;
 	    if(freq == 0)
-	    	freq = 60000;	
+	    	freq = 60000;
 
             std::ifstream inputTemp(TEMPERATURE);
             inputTemp >> temp;
@@ -61,18 +60,17 @@ int main()
                 std::cerr <<  "SQL prepare error "  << std::endl;
                 std::exit(rc);
             }
-	   
+
             rc = sqlite3_bind_double(stmt, 1, temp);
             rc = sqlite3_bind_double(stmt, 2, pressure);
-	   
+
             rc = sqlite3_step(stmt);
             if ( rc != SQLITE_DONE)
             {
                 std::cerr << "SQL step error " << std::endl;
                 std::exit(rc);
             }
-	    	
-           
+
             std::this_thread::sleep_for(std::chrono::milliseconds(freq));
     }
     return 0;
