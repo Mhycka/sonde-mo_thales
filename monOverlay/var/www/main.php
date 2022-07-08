@@ -47,7 +47,7 @@ $fetch_url = '/' . $api . '/?' . $uri_parts[1];
 				<div class="logo">	
 					 <h1>AJC </h1> <h2>Weather Station</h2>
 				</div>			
-				<p>Welcome to the weather station whichallow you to simply get access to meteorological data such as pressure and temperature. This also allow you to track those data along time. </p>
+				<p>Welcome to the weather station which allow you to simply get access to meteorological data such as pressure and temperature. This also allow you to track those data along time. </p>
 			</div>
 
 
